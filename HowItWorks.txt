@@ -1,0 +1,38 @@
+VECTOR MATH USE CASES — Sentinel Robotic Arm Control
+======================================================
+
+JOYSTICK MAPPING
+----------------
+With a dual-stick controller, the left stick maps directly to the X and Y axes
+of the target vector, and the right stick (or a trigger/slider) controls Z.
+The controller output is just three numbers — plug them into a Vector3 and call
+move_to(). No per-joint logic, no mode switching. The robot follows the stick
+in real space intuitively, making teleoperation dead simple to implement.
+
+
+HAND TRACKING
+-------------
+Same idea as joystick mapping, but the input is a hand position instead of
+stick deflection. Define a bounding box in front of the camera — say 40x40x40cm
+— and normalize the tracked hand coordinates within that box to your robot's
+workspace range. The hand becomes the end-effector. Move your hand, the arm
+follows. The math is identical to joystick mapping; only the input source changes.
+
+
+AI CODE SIMPLICITY
+------------------
+When an AI model needs to control the arm, it only has to output three values:
+x, y, z. That's the entire action space. Compare that to outputting an angle for
+every joint independently — for a 3 DOF arm that's already 3 separate values
+with complex geometric dependencies between them, and it only gets worse at
+higher DOF. A single target vector keeps the model's output space minimal,
+human-readable, and easy to reward/train on.
+
+
+TRADEOFF
+--------
+The one downside of working purely in end-effector space is that you give up
+direct joint control. If you need a specific arm pose — avoiding an obstacle
+mid-path, holding a particular orientation, or locking a joint — you can't
+express that through a single target vector alone. For those cases you'd need
+to drop down to the joint-space API directly.
