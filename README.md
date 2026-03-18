@@ -15,11 +15,6 @@ At the heart of Sentinel's arm control is a single idea: **a position in space i
 
 You pass in a 3D target vector `(x, y, z)`, and Sentinel's inverse kinematics engine decomposes that into the individual joint vectors required to reach it — automatically resolving the geometry across all degrees of freedom.
 
-```python
-arm = sentinel.RoboticArm(dof=3)
-arm.move_to(Vector3(x=12.4, y=0.0, z=8.7))  # That's it.
-```
-
 ---
 
 ## Benefits
@@ -36,21 +31,10 @@ As the arm moves, Sentinel streams back the **current end-effector vector** so y
 ### 🧮 Math-Native Interface
 Vectors are first-class citizens in Sentinel. Add, subtract, scale, and interpolate them using Sentinel's built-in `Vector3` class — making smooth trajectories, relative offsets, and dynamic waypoints trivial to express.
 
-```python
-# Move 5 units forward from current position
-arm.move_to(arm.position + Vector3(x=5, y=0, z=0))
-```
+
 
 ### 🗺️ Waypoint Chaining
 Pass a list of vectors to define a multi-step path. Sentinel interpolates between them and executes the sequence, making pick-and-place routines and patrol paths expressible in a few lines.
-
-```python
-arm.follow_path([
-    Vector3(10, 0, 5),
-    Vector3(10, 5, 5),
-    Vector3(0,  5, 0),
-])
-```
 
 ### ⚙️ Hardware-Agnostic
 The vector abstraction sits above the hardware layer — the same `move_to()` call works whether your arm runs on servo PWM signals, stepper drivers, or a ROS 2 action server. Swap the backend without changing your control logic.
